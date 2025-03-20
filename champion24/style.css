@@ -1,0 +1,169 @@
+/* Custom styles for Champion 24 Music Player */
+
+/* Smooth transitions */
+.transition-all {
+    transition: all 0.3s ease;
+}
+
+/* Album art rotation animation */
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.rotating {
+    animation: rotate 20s linear infinite;
+}
+
+/* Tab styling */
+.tab-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    color: #9ca3af;
+    transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+    color: white;
+    background: rgba(107, 114, 128, 0.2);
+}
+
+.tab-btn.active {
+    color: white;
+    background: #6366f1;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Modal animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+#playlistModal {
+    animation: fadeIn 0.3s ease;
+}
+
+#playlistModal > div {
+    animation: slideUp 0.3s ease;
+}
+
+/* Favorite animation */
+@keyframes favorite {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.favorite-active {
+    color: #ec4899;
+    animation: favorite 0.3s ease;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1f2937;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #4f46e5;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #4338ca;
+}
+
+/* Hover effects */
+.hover-scale {
+    transition: transform 0.2s ease;
+}
+
+.hover-scale:hover {
+    transform: scale(1.05);
+}
+
+/* Progress bar animation */
+@keyframes progress {
+    from {
+        width: 0%;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+/* Volume slider custom styling */
+input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    background: #374151;
+    border-radius: 2px;
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    background: #4f46e5;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    background: #4338ca;
+}
+
+/* Pulse animation for playing state */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Gradient background */
+.gradient-bg {
+    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+}
+
+/* Glass morphism effect */
+.glass-effect {
+    background: rgba(31, 41, 55, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}

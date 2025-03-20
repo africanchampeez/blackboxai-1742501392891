@@ -4,31 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Champion 24 - Music Player</title>
+    <meta name="description" content="A modern music player app">
+    <meta name="theme-color" content="#8b5cf6">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gray-900 text-white font-[Poppins]">
-    <div class="min-h-screen flex flex-col">
+    <!-- Install Banner -->
+    <div id="installBanner" class="fixed top-0 left-0 right-0 bg-purple-600 text-white py-4 px-6 flex justify-between items-center hidden z-50">
+        <div class="flex items-center gap-2">
+            <i class="fas fa-download text-xl"></i>
+            <span>Install Champion 24 on your device</span>
+        </div>
+        <button id="installBtn" class="bg-white text-purple-600 px-4 py-2 rounded-full hover:bg-purple-100 transition-colors">
+            Install Now
+        </button>
+    </div>
+
+    <div class="min-h-screen flex flex-col pt-14">
         <!-- Header -->
         <header class="bg-gray-800 py-4 px-6 flex justify-between items-center">
             <div class="flex items-center gap-2">
                 <i class="fas fa-music text-2xl text-purple-500"></i>
                 <h1 class="text-2xl font-bold">Champion 24</h1>
             </div>
-<div class="flex gap-4 items-center">
-    <label class="cursor-pointer hover:text-purple-500 transition-colors">
-        <i class="fas fa-plus text-xl"></i>
-        <input type="file" accept="audio/*" multiple class="hidden" id="audioFileInput">
-    </label>
-    <button class="hover:text-purple-500 transition-colors" id="playlistBtn">
-        <i class="fas fa-list text-xl"></i>
-    </button>
-    <button class="hover:text-purple-500 transition-colors" id="favoritesBtn">
-        <i class="fas fa-heart text-xl"></i>
-    </button>
-</div>
+            <div class="flex gap-4 items-center">
+                <label class="cursor-pointer hover:text-purple-500 transition-colors">
+                    <i class="fas fa-plus text-xl"></i>
+                    <input type="file" accept="audio/*" multiple class="hidden" id="audioFileInput">
+                </label>
+                <button class="hover:text-purple-500 transition-colors" id="playlistBtn">
+                    <i class="fas fa-list text-xl"></i>
+                </button>
+                <button class="hover:text-purple-500 transition-colors" id="favoritesBtn">
+                    <i class="fas fa-heart text-xl"></i>
+                </button>
+            </div>
         </header>
 
         <!-- Main Content -->
@@ -128,5 +143,66 @@
         </main>
     </div>
     <script src="script.js"></script>
+    <script>
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful');
+                        // Check if the app can be installed
+                        if (window.matchMedia('(display-mode: browser)').matches && 
+                            !localStorage.getItem('appInstalled')) {
+                            document.getElementById('installBanner').classList.remove('hidden');
+                        }
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+
+        // Installation handling
+        let deferredPrompt;
+        const installBanner = document.getElementById('installBanner');
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBanner.classList.remove('hidden');
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                    localStorage.setItem('appInstalled', 'true');
+                    installBanner.classList.add('hidden');
+                }
+                deferredPrompt = null;
+            } else {
+                // Show instructions for iOS users
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                if (isIOS) {
+                    alert('To install the app on iOS:\n1. Tap the Share button\n2. Scroll down and tap "Add to Home Screen"');
+                }
+            }
+        });
+
+        // Hide banner if app is already installed
+        window.addEventListener('appinstalled', () => {
+            localStorage.setItem('appInstalled', 'true');
+            installBanner.classList.add('hidden');
+            console.log('PWA was installed');
+        });
+
+        // Check if running as installed PWA
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            installBanner.classList.add('hidden');
+        }
+    </script>
 </body>
 </html>
